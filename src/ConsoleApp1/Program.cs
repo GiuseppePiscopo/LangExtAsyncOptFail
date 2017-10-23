@@ -24,14 +24,14 @@ namespace ConsoleApp1
             return ValidateAsync();
         }
 
-        static Task<Either<int, string>> ValidateAsync()
+        static Task<Either<int, User>> ValidateAsync()
         {
             var result =
 
-                from loaded in FindNameAsync("zzz").ToEitherAsync(()
+                from loaded in FindUserAsync("zzz").ToEitherAsync(()
                     => -1)
 
-                from transformed in VerifyName(loaded).ToEitherAsync(()
+                from transformed in VerifyUser(loaded).ToEitherAsync(()
                     => -2)
 
                 select transformed;
@@ -39,10 +39,10 @@ namespace ConsoleApp1
             return result;
         }
 
-        static Task<Option<string>> FindNameAsync(string name)
+        static Task<Option<User>> FindUserAsync(string name)
         {
-            var names = GetNames()
-                .Where(n => n == name);
+            var names = GetUsers()
+                .Where(n => (string)n == name);
 
             var firstFound = names.FirstOrDefaultAsync();
 
@@ -51,36 +51,50 @@ namespace ConsoleApp1
             return result;
         }
 
-        static IQueryable<string> GetNames()
+        static IQueryable<User> GetUsers()
         {
             // emulate EF DBSet
 
-            return new[]
+            var names = new[]
             {
                 "aaa",
                 "bbb",
                 "ccc",
 
-            }.AsQueryable();
+            };
+
+            var users = names
+                .Select(n => new User(n));
+
+            return users
+                .AsQueryable();
         }
 
-        static Option<string> VerifyName(string name)
+        static Option<User> VerifyUser(User user)
         {
+            string name = (string)user;
+
             // just apply some dummy test
 
             return (name.Length > 0)
-                ? Some(name)
+                ? Some(user)
                 : None;
         }
     }
 
+    public class User : NewType<User, string>
+    {
+        public User(string name) : base(name)
+        { }
+    }
+
     public static class EFCoreDummyExtensions
     {
-        public static Task<string> FirstOrDefaultAsync(this IQueryable<string> items)
+        public static Task<User> FirstOrDefaultAsync(this IQueryable<User> items)
         {
             // emulate EF extension
 
-            string value = items.FirstOrDefault();
+            var value = items.FirstOrDefault();
 
             return Task.FromResult(value);
         }
