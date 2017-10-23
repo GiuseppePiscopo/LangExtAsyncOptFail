@@ -26,6 +26,8 @@ namespace ConsoleApp1
 
         static Task<Either<int, User>> ValidateAsync()
         {
+            // pretend `int` stands for some custom error type
+
             var result =
 
                 from loaded in FindUserAsync("zzz").ToEitherAsync(()
