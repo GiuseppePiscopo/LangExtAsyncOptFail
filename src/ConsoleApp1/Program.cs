@@ -41,10 +41,10 @@ namespace ConsoleApp1
 
         static Task<Option<User>> FindUserAsync(string name)
         {
-            var names = GetUsers()
+            var users = GetUsers()
                 .Where(n => (string)n == name);
 
-            var firstFound = names.FirstOrDefaultAsync();
+            var firstFound = users.FirstOrDefaultAsync();
 
             var result = firstFound.Map(Optional);
 
