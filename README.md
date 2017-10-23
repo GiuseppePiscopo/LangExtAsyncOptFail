@@ -1,5 +1,6 @@
 # LangExtAsyncOptFail
-Sample solution showing issue with Language-Ext package and failing async operation
+Sample solution showing issue with Language-Ext package and failing async operation.
+See [issue 292](https://github.com/louthy/language-ext/issues/292) on project [home](https://github.com/louthy/language-ext/).
 
 ## Steps
 
