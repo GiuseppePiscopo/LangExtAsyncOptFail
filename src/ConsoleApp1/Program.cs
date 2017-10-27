@@ -107,9 +107,9 @@ namespace ConsoleApp1
         public static async Task<Either<int, A>> Where<A>(this Task<Either<int, A>> self, Func<A, bool> f) =>
             (await self).Match(
                 Right: r => f(r)
-                    ? r
+                    ? Right<int, A>(r)
                     : Either<int, A>.Bottom,
-                Left: l => l);
+                Left: l => Left<int, A>(l));
     }
 
     public class User : NewType<User, string>
