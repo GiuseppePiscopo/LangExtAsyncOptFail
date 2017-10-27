@@ -84,6 +84,34 @@ namespace ConsoleApp1
         }
     }
 
+    // See suggestion from another issue comment:
+    // https://github.com/louthy/language-ext/issues/242#issuecomment-318335885
+
+    public static class LeftTypeSpecificExtensions
+    {
+        public static async Task<Either<int, B>> Select<A, B>(this Task<Either<int, A>> self, Func<A, B> f) =>
+            (await self).Match(
+                Right: r => Right<int, B>(f(r)),
+                Left: l => Left<int, B>(l));
+
+        public static async Task<Either<int, C>> SelectMany<A, B, C>(
+            this Task<Either<int, A>> self,
+            Func<A, Task<Either<int, B>>> bind,
+            Func<A, B, C> project) =>
+            await (await self).MatchAsync(
+                Right: async a => (await bind(a)).Match(
+                    Right: b => Right<int, C>(project(a, b)),
+                    Left: l => Left<int, C>(l)),
+                Left: l => Left<int, C>(l));
+
+        public static async Task<Either<int, A>> Where<A>(this Task<Either<int, A>> self, Func<A, bool> f) =>
+            (await self).Match(
+                Right: r => f(r)
+                    ? r
+                    : Either<int, A>.Bottom,
+                Left: l => l);
+    }
+
     public class User : NewType<User, string>
     {
         public User(string name) : base(name)
