@@ -21,3 +21,6 @@ See generated exception, the one wrapped in an *AggregateException* due to `.Wai
    at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)  
    at TaskExtensions.<SelectMany>d__5`3.MoveNext()
 
+### Workarounds
+
+See branch [fix/left-type-extensions](https://github.com/GiuseppePiscopo/LangExtAsyncOptFail/tree/fix/left-type-extensions) for a possible workaround. See also [changes made](https://github.com/GiuseppePiscopo/LangExtAsyncOptFail/compare/master...fix/left-type-extensions).
